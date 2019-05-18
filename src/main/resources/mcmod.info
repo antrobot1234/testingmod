@@ -1,0 +1,16 @@
+[
+{
+  "modid": "anttm",
+  "name": "Test Mod",
+  "description": "trying to learn how to mod",
+  "version": "0.1",
+  "mcversion": "1.12.2",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["antrobot"],
+  "credits": "Loremaster for the tutorial",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
