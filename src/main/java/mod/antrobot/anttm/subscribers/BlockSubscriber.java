@@ -15,7 +15,7 @@ public class BlockSubscriber {
     @SubscribeEvent
     public static void onRegisterBlocksEvent(final RegistryEvent.Register<Block> event) {
         event.getRegistry().registerAll(
-                setupRegistry(new Block(Material.ROCK), "test_block")
+                //setupRegistry(new Block(Material.ROCK), "test_block")
         );
     }
 }

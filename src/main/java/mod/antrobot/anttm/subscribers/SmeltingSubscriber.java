@@ -9,9 +9,9 @@ import mod.antrobot.anttm.util.ModReference;
 @GameRegistry.ObjectHolder(ModReference.ID)
 public class SmeltingSubscriber {
     //add items here
-    public static final Item test = null;
+    //public static final Item test = null;
     public static void registerSmeltingRecipes(){
         //register items here
-        GameRegistry.addSmelting(test,new ItemStack(Items.IRON_INGOT),0.1F);
+        //GameRegistry.addSmelting(test,new ItemStack(Items.IRON_INGOT),0.1F);
     }
 }

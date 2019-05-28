@@ -19,7 +19,7 @@ public class ItemSubscriber {
     public static void onRegisterItemsEvent(final RegistryEvent.Register<Item> event) {
         final IForgeRegistry<Item> registry = event.getRegistry();
         registry.registerAll(
-                setupRegistry(new Item(), "test")
+                //setupRegistry(new Item(), "test")
         );
 
         ForgeRegistries.BLOCKS.getValuesCollection().stream()

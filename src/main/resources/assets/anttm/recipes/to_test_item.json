@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:crafting_shapeless",
-  "ingredients": [
-    {"item": "anttm:test_block"}
-  ],
-  "result": {
-    "item": "anttm:test",
-    "count":4  }
-}
