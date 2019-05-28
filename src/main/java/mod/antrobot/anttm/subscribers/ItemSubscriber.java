@@ -22,7 +22,7 @@ public class ItemSubscriber {
                 setupRegistry(new Item(), "test")
         );
 
-        ForgeRegistries.BLOCKS.getValues().stream()
+        ForgeRegistries.BLOCKS.getValuesCollection().stream()
                 .filter(block -> block.getRegistryName().getNamespace().equals(ModReference.ID))
                 .filter(SubscriberTools::hasItemBlock)
                 .forEach(block -> {
