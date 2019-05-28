@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": ["tt","tt"],
+  "key": {
+    "t": {
+      "item": "anttm:test"
+    }
+  },
+  "result": {
+    "item": "anttm:test_block",
+    "count": 1
+  }
+}

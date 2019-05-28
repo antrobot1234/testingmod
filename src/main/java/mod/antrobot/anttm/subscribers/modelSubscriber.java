@@ -17,7 +17,7 @@ public class modelSubscriber {
     public static void onRegisterModelsEvent(ModelRegistryEvent event){
         registerTileEntitySpecialRenderers();
         registerEntityRenderers();
-        ForgeRegistries.ITEMS.getValues().stream()
+        ForgeRegistries.ITEMS.getValuesCollection().stream()
                 .filter(item -> item.getRegistryName().getNamespace().equals(ModReference.ID))
                 .forEach(item -> {
             ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
