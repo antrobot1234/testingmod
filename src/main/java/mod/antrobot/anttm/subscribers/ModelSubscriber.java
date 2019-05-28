@@ -11,7 +11,7 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import static net.minecraftforge.fml.relauncher.Side.CLIENT;
 
 @Mod.EventBusSubscriber(modid = ModReference.ID, value = CLIENT)
-public class modelSubscriber {
+public class ModelSubscriber {
 
     @SubscribeEvent
     public static void onRegisterModelsEvent(ModelRegistryEvent event){
