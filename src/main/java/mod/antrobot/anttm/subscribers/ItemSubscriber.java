@@ -1,6 +1,7 @@
 package mod.antrobot.anttm.subscribers;
 
 
+import mod.antrobot.anttm.items.Inserter;
 import mod.antrobot.anttm.util.ModReference;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -19,7 +20,7 @@ public class ItemSubscriber {
     public static void onRegisterItemsEvent(final RegistryEvent.Register<Item> event) {
         final IForgeRegistry<Item> registry = event.getRegistry();
         registry.registerAll(
-                //setupRegistry(new Item(), "test")
+                setupRegistry(new Inserter(),"inserter")
         );
 
         ForgeRegistries.BLOCKS.getValuesCollection().stream()
