@@ -3,7 +3,6 @@ import mod.antrobot.anttm.subscribers.SmeltingSubscriber;
 import mod.antrobot.anttm.util.ModReference;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 
 
 @Mod(modid = ModReference.ID,name = ModReference.NAME,version = ModReference.VERSION)
