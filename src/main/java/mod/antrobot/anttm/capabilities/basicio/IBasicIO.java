@@ -1,6 +1,7 @@
 package mod.antrobot.anttm.capabilities.basicio;
 
 public interface IBasicIO {
+    boolean validInput(String i);
 
     String getInput();
     void setInput(String i);
