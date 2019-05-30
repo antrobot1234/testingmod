@@ -1,8 +1,6 @@
 package mod.antrobot.anttm.capabilities.basicio;
 
 public interface IBasicIO {
-    String input = "left";
-    boolean output = false;
 
     String getInput();
     void setInput(String i);
