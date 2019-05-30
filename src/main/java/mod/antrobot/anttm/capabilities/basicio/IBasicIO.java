@@ -2,13 +2,13 @@ package mod.antrobot.anttm.capabilities.basicio;
 
 public interface IBasicIO {
     String input = "null";
-    String output = "null";
+    boolean output = false;
 
     String getInput();
     void setInput(String i);
 
-    String getOutput();
-    void setOutput(String i);
+    boolean getOutput();
+    void setOutput(boolean i);
 
     int calculateInput(int slot);
     int calculateOutput(int slot);
