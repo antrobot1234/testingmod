@@ -1,46 +1,46 @@
 package mod.antrobot.anttm.items;
 
-import com.sun.istack.internal.Nullable;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
 
 public class Inserter extends Item {
 
-    @CapabilityInject(IItemHandler.class)
-    public static Capability<IItemHandler> ITEM_HANDLER;
 
-    public Inserter(){
+    public Inserter() {
         setMaxStackSize(1);
     }
 
     @Override
     public void onUpdate(ItemStack stack, World world, Entity player, int slot, boolean held) {
         super.onUpdate(stack, world, player, slot, held);
-    }
-    @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt)
-    {
-        return new ICapabilityProvider() {
-            @Override
-            public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-                return capability == ITEM_HANDLER;
-            }
 
-            @Override
-            public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-                if(capability == ITEM_HANDLER) return (T) ITEM_HANDLER;
-                return null;
-            }
-        };
-    }
+        if (slot % 9 == 0) return;
+        if (slot % 9 == 8) return;
 
+        InventoryPlayer inventory = ((EntityPlayer) player).inventory;
+
+        ItemStack inStack = inventory.getStackInSlot(slot - 1);
+        if (inStack.isEmpty()) return;
+
+        ItemStack outStack = inventory.getStackInSlot(slot+1);
+        if(!outStack.isEmpty()) {
+            if (outStack.getCount() == outStack.getMaxStackSize()) return;
+            if (!inStack.isItemEqual(outStack)) return;
+            if(!ItemStack.areItemStackTagsEqual(inStack,outStack))return;
+            outStack.grow(1);
+            inStack.shrink(1);
+        }
+        else{
+            ItemStack stackClone = inStack.splitStack(1);
+            inventory.setInventorySlotContents(slot+1,stackClone);
+            inventory.getStackInSlot(slot+1).setCount(1);
+        }
+        ((EntityPlayer) player).inventoryContainer.detectAndSendChanges();
+    }
 }
