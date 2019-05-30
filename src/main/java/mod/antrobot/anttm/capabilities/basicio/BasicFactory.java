@@ -1,5 +1,7 @@
 package mod.antrobot.anttm.capabilities.basicio;
 
+import net.minecraft.nbt.NBTTagCompound;
+
 import java.util.concurrent.Callable;
 
 public class BasicFactory implements Callable<IBasicIO> {
@@ -38,7 +40,9 @@ public class BasicFactory implements Callable<IBasicIO> {
 
             @Override
             public int calcLeft(int slot) {
-                if(slot%9==0)return -1;
+                if(slot%9==0){
+                    return -1;
+                }
                 return slot-1;
             }
             @Override
@@ -48,13 +52,15 @@ public class BasicFactory implements Callable<IBasicIO> {
             }
             @Override
             public int calcUp(int slot) {
-                if(slot/10==3)return -1;
-                return slot+9;
+                if(slot<=17&&slot>=8)return -1;
+                if((slot+1)/9==0)return slot+27;
+                return slot-9;
             }
             @Override
             public int calcDown(int slot) {
-                if(slot/10==0)return -1;
-                return slot-9;
+                if((slot+1)/9==0)return -1;
+                if(slot<=35&&slot>=27)return slot-27;
+                return slot+9;
             }
 
             @Override
@@ -76,8 +82,8 @@ public class BasicFactory implements Callable<IBasicIO> {
             }
 
             @Override
-            public boolean isValid(int slot) {
-                return calcInput(slot)==-1|| calcOutput(slot)==-1;
+            public boolean isInvalid(int slot) {
+                return calcInput(slot)==-1 || calcOutput(slot)==-1;
             }
 
             @Override
