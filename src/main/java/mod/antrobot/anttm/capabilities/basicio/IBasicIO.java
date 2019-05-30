@@ -19,4 +19,6 @@ public interface IBasicIO {
     int calculateOutput(int slot);
 
     boolean isValid(int slot);
+
+    void cycleInput();
 }
