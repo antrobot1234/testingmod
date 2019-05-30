@@ -15,7 +15,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 
 public class Inserter extends Item{
 
@@ -67,10 +67,23 @@ public class Inserter extends Item{
     }
 
     @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack,NBTTagCompound nbt)
+    public ICapabilitySerializable<NBTTagCompound> initCapabilities(ItemStack stack, NBTTagCompound nbt)
     {
-        return new ICapabilityProvider() {
-            private IBasicIO instance = IO_CAPABILITY.getDefaultInstance();
+        IBasicIO instance = IO_CAPABILITY.getDefaultInstance();
+        return new ICapabilitySerializable<NBTTagCompound>() {
+            @Override
+            public NBTTagCompound serializeNBT(){
+                NBTTagCompound nbt = new NBTTagCompound();
+                nbt.setString("input",instance.getInput());
+                nbt.setBoolean("output",instance.getOutput());
+                return nbt;
+            }
+            @Override
+            public void deserializeNBT(NBTTagCompound nbt){
+                instance.setInput(nbt.getString("input"));
+                instance.setOutput(nbt.getBoolean("output"));
+            }
+
             @Override
             public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
                 if(capability == IO_CAPABILITY)return true;
