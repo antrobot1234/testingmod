@@ -25,14 +25,8 @@ public class Inserter extends Item{
     }
 
     @CapabilityInject(IBasicIO.class)
-    static Capability<IBasicIO> IO_CAPABILITY = null;
+    private static Capability<IBasicIO> IO_CAPABILITY = null;
 
-    @Override
-    public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn)
-    {
-        stack.getCapability(IO_CAPABILITY,null).setOutput(true);
-        stack.getCapability(IO_CAPABILITY,null).setInput("left");
-    }
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)
     {
@@ -48,14 +42,15 @@ public class Inserter extends Item{
 
         IBasicIO io = stack.getCapability(IO_CAPABILITY,null);
 
-        if(!io.isValid(slot))return;
+        if(io.isInvalid(slot))return;
 
         InventoryPlayer inventory = ((EntityPlayer) player).inventory;
+        int inSlot = io.calcInput(slot);
 
-        ItemStack inStack = inventory.getStackInSlot(io.calcInput(slot));
+        ItemStack inStack = inventory.getStackInSlot(inSlot);
         if (inStack.isEmpty()) return;
-
-        ItemStack outStack = inventory.getStackInSlot(io.calcOutput(slot));
+        int outSlot = io.calcOutput(slot);
+        ItemStack outStack = inventory.getStackInSlot(outSlot);
         if(!outStack.isEmpty()) {
             if (outStack.getCount() == outStack.getMaxStackSize()) return;
             if (!inStack.isItemEqual(outStack)) return;
@@ -65,8 +60,8 @@ public class Inserter extends Item{
         }
         else{
             ItemStack stackClone = inStack.splitStack(1);
-            inventory.setInventorySlotContents(io.calcOutput(slot),stackClone);
-            inventory.getStackInSlot(io.calcOutput(slot)).setCount(1);
+            inventory.setInventorySlotContents(outSlot,stackClone);
+            inventory.getStackInSlot(outSlot).setCount(1);
         }
         ((EntityPlayer) player).inventoryContainer.detectAndSendChanges();
     }
@@ -75,6 +70,7 @@ public class Inserter extends Item{
     public ICapabilityProvider initCapabilities(ItemStack stack,NBTTagCompound nbt)
     {
         return new ICapabilityProvider() {
+            private IBasicIO instance = IO_CAPABILITY.getDefaultInstance();
             @Override
             public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
                 if(capability == IO_CAPABILITY)return true;
@@ -83,7 +79,7 @@ public class Inserter extends Item{
 
             @Override
             public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-                if(capability == IO_CAPABILITY) return (T)IO_CAPABILITY;
+                if(capability == IO_CAPABILITY) return IO_CAPABILITY.<T> cast(instance);
                 return null;
             }
         };
