@@ -1,6 +1,6 @@
 package mod.antrobot.anttm.capabilities.basicio;
 
-public interface IBasicIO {
+public interface IBasicIO{
     boolean validInput(String i);
 
     String getInput();
@@ -17,7 +17,7 @@ public interface IBasicIO {
     int calcInput(int slot);
     int calcOutput(int slot);
 
-    boolean isValid(int slot);
+    boolean isInvalid(int slot);
 
     void cycleInput();
 }
