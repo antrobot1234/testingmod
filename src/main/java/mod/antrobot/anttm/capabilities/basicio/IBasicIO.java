@@ -13,8 +13,8 @@ public interface IBasicIO {
     int calcUp(int slot);
     int calcDown(int slot);
 
-    int calculateInput(int slot);
-    int calculateOutput(int slot);
+    int calcInput(int slot);
+    int calcOutput(int slot);
 
     boolean isValid(int slot);
 
