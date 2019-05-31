@@ -5,30 +5,25 @@ import net.minecraft.nbt.NBTTagCompound;
 import java.util.concurrent.Callable;
 
 public class BasicFactory implements Callable<IBasicIO> {
-    @Override
+    public enum InputFacing {up,down,left,right}
     public IBasicIO call() throws Exception {
-        return new IBasicIO() {
-            String input = "left";
-            boolean output = true;
 
+        return new IBasicIO() {
+            InputFacing input = InputFacing.valueOf("left");
+            boolean output = true;
             @Override
-            public boolean validInput(String i){
-                String[] possibilities = "left right up down".split(" ");
-                for(String s: possibilities){
-                    if(s.equals(i))return true;
-                }
-                return false;
-            }
-            @Override
-            public String getInput() {
-                return this.input;
+            public InputFacing getInput() {
+                return input;
             }
             @Override
             public void setInput(String i){
-                if(!validInput(i))throw new IllegalArgumentException("input is not one of the four valid responses: up, down, left, right");
-                input = i.toLowerCase();
+                input = InputFacing.valueOf(i.toLowerCase());
             }
+            @Override
+            public void setInput(InputFacing i){
+                input = i;
 
+            }
             @Override
             public boolean getOutput(){
                 return output;
@@ -65,19 +60,23 @@ public class BasicFactory implements Callable<IBasicIO> {
 
             @Override
             public int calcInput(int slot) {
-                if(input.equals("left"))return calcLeft(slot);
-                if(input.equals("right"))return calcRight(slot);
-                if(input.equals("up"))return calcUp(slot);
-                if(input.equals("down"))return calcDown(slot);
+                switch(input) {
+                    case left: return calcLeft(slot);
+                    case right: return calcRight(slot);
+                    case up: return calcUp(slot);
+                    case down: return calcDown(slot);
+                }
                 return -1;
             }
             @Override
             public int calcOutput(int slot) {
                 if(!output)return -1;
-                if(input.equals("left"))return calcRight(slot);
-                if(input.equals("right"))return calcLeft(slot);
-                if(input.equals("up"))return calcDown(slot);
-                if(input.equals("down"))return calcUp(slot);
+                switch (input) {
+                    case left: return calcRight(slot);
+                    case right: return calcLeft(slot);
+                    case up: return calcDown(slot);
+                    case down: return calcUp(slot);
+                }
                 return -1;
             }
 
@@ -88,10 +87,12 @@ public class BasicFactory implements Callable<IBasicIO> {
 
             @Override
             public void cycleInput(){
-                if(input.equals("left"))input = "up";
-                else if(input.equals("right"))input = "down";
-                else if(input.equals("up"))input = "right";
-                else if(input.equals("down"))input = "left";
+                switch(input){
+                    case up: input = InputFacing.right;
+                    case right: input = InputFacing.down;
+                    case down: input = InputFacing.left;
+                    case left: input = InputFacing.up;
+                }
             }
         };
     }
