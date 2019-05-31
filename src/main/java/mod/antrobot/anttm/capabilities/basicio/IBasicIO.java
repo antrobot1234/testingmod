@@ -2,9 +2,9 @@ package mod.antrobot.anttm.capabilities.basicio;
 
 public interface IBasicIO{
 
-    BasicFactory.InputFacing getInput();
+    BasicFactory.EnumDir getInput();
     void setInput(String i);
-    void setInput(BasicFactory.InputFacing i);
+    void setInput(BasicFactory.EnumDir i);
 
     boolean getOutput();
     void setOutput(boolean i);

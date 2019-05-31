@@ -1,26 +1,24 @@
 package mod.antrobot.anttm.capabilities.basicio;
 
-import net.minecraft.nbt.NBTTagCompound;
-
 import java.util.concurrent.Callable;
 
 public class BasicFactory implements Callable<IBasicIO> {
-    public enum InputFacing {up,down,left,right}
+    public enum EnumDir {up,down,left,right}
     public IBasicIO call() throws Exception {
 
         return new IBasicIO() {
-            InputFacing input = InputFacing.valueOf("left");
+            EnumDir input = EnumDir.valueOf("left");
             boolean output = true;
             @Override
-            public InputFacing getInput() {
+            public EnumDir getInput() {
                 return input;
             }
             @Override
             public void setInput(String i){
-                input = InputFacing.valueOf(i.toLowerCase());
+                input = EnumDir.valueOf(i.toLowerCase());
             }
             @Override
-            public void setInput(InputFacing i){
+            public void setInput(EnumDir i){
                 input = i;
 
             }
@@ -88,10 +86,10 @@ public class BasicFactory implements Callable<IBasicIO> {
             @Override
             public void cycleInput(){
                 switch(input){
-                    case up: input = InputFacing.right;
-                    case right: input = InputFacing.down;
-                    case down: input = InputFacing.left;
-                    case left: input = InputFacing.up;
+                    case up: input = EnumDir.right;return;
+                    case left: input = EnumDir.up;return;
+                    case down: input = EnumDir.left;return;
+                    case right: input = EnumDir.down;return;
                 }
             }
         };

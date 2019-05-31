@@ -19,6 +19,7 @@ public class ModelSubscriber {
     public static void onRegisterModelsEvent(ModelRegistryEvent event){
         registerTileEntitySpecialRenderers();
         registerEntityRenderers();
+
         ForgeRegistries.ITEMS.getValuesCollection().stream()
                 .filter(item -> item.getRegistryName().getNamespace().equals(ModReference.ID))
                 .filter(ModelSubscriber::hasNormalModel)
@@ -27,7 +28,10 @@ public class ModelSubscriber {
         });
     }
     private static boolean hasNormalModel(Item item){
-        if(item instanceof Inserter)return false;
+        if(item instanceof Inserter){
+            ((Inserter) item).initModel();
+            return false;
+        }
         return true;
     }
     private static void registerTileEntitySpecialRenderers() {
@@ -35,5 +39,7 @@ public class ModelSubscriber {
     }
     private static void registerEntityRenderers() {
         //RenderingRegistry.registerEntityRenderingHandler(Entity___.class, Entity___Renderer::new);
+    }
+    private static void registerSpecialItemRenderers(){
     }
 }
