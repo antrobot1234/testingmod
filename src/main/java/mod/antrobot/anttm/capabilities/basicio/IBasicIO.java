@@ -1,10 +1,10 @@
 package mod.antrobot.anttm.capabilities.basicio;
 
 public interface IBasicIO{
-    boolean validInput(String i);
 
-    String getInput();
+    BasicFactory.InputFacing getInput();
     void setInput(String i);
+    void setInput(BasicFactory.InputFacing i);
 
     boolean getOutput();
     void setOutput(boolean i);
