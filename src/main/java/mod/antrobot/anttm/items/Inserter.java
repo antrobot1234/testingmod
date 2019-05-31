@@ -75,8 +75,9 @@ public class Inserter extends Item{
         if(io.isInvalid(currentSlot))return;
         int outSlot = io.calcOutput(currentSlot);
         ItemStack outStack = inventory.getStackInSlot(outSlot);
-        if(outStack.getItem()==this){
+        if(outStack != currentWorker && outStack.getItem()==this){
             forward(inventory,inStack,outStack,outSlot);
+            //TODO see and fix why the fuck this crashed the game with an infinte loop (i mean yeah recursion but seriously)
             return;
         }
         else{
@@ -142,7 +143,7 @@ public class Inserter extends Item{
         ModelLoader.setCustomMeshDefinition(this,new ItemMeshDefinition(){
             @Override
             public ModelResourceLocation getModelLocation(ItemStack stack) {
-                BasicFactory.InputFacing input = stack.getCapability(IO_CAPABILITY,null).getInput();
+                BasicFactory.EnumDir input = stack.getCapability(IO_CAPABILITY,null).getInput();
                 switch(input){
                     case up: return down;
                     case down: return up;
