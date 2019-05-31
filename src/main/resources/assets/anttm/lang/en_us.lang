@@ -1,1 +1,5 @@
-item.anttm.inserter.name= Basic Item Inserter
+item.anttm.inserter.name=BII
+item.anttm.extender.name=IRE
+
+anttm.tooltip.inserter=Basic Item Inserter
+anttm.tooltip.extender=Inserter Reach Extender
