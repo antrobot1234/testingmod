@@ -21,13 +21,16 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class Inserter extends Item{
+public class Inserter extends ItemTooltip{
+    @GameRegistry.ObjectHolder("anttm:extender")
+    public static final Item extender = null;
 
-
-    public Inserter() {
+    public Inserter(String tooltip) {
+        super(tooltip);
         setMaxStackSize(1);
     }
 
@@ -37,12 +40,11 @@ public class Inserter extends Item{
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)
     {
-        if(worldIn.isRemote) return new ActionResult<ItemStack>(EnumActionResult.PASS, playerIn.getHeldItem(handIn));
         ItemStack item = playerIn.getHeldItem(handIn);
         IBasicIO io = item.getCapability(IO_CAPABILITY,null);
         io.cycleInput();
         playerIn.sendStatusMessage(new TextComponentString("pulling from: "+io.getInput()),true);
-        return new ActionResult<ItemStack>(EnumActionResult.PASS, playerIn.getHeldItem(handIn));
+        return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, playerIn.getHeldItem(handIn));
     }
     @Override
     public void onUpdate(ItemStack stack, World world, Entity player, int slot, boolean held) {
@@ -63,20 +65,21 @@ public class Inserter extends Item{
         int outSlot = io.calcOutput(slot);
         ItemStack outStack = inventory.getStackInSlot(outSlot);
         if(outStack.getItem()==this){
-            forward(inventory,inStack,outStack,outSlot);
+            forward(inventory,inStack,outStack,outSlot,1);
         }
         else{
         insert(inventory,inStack,outStack,outSlot);
         }
     }
-    public void forward(InventoryPlayer inventory,ItemStack inStack, ItemStack currentWorker,int currentSlot){
+    public void forward(InventoryPlayer inventory,ItemStack inStack, ItemStack currentWorker,int currentSlot,int count){
+        if(count >= 10)return;
         if(inStack==currentWorker)return;
         IBasicIO io = currentWorker.getCapability(IO_CAPABILITY,null);
         if(io.isInvalid(currentSlot))return;
         int outSlot = io.calcOutput(currentSlot);
         ItemStack outStack = inventory.getStackInSlot(outSlot);
         if(outStack != currentWorker && outStack.getItem()==this){
-            forward(inventory,inStack,outStack,outSlot);
+            forward(inventory,inStack,outStack,outSlot,count+1);
             //TODO see and fix why the fuck this crashed the game with an infinte loop (i mean yeah recursion but seriously)
             return;
         }
