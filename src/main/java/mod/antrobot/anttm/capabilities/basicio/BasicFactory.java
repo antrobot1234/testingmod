@@ -7,8 +7,8 @@ public class BasicFactory implements Callable<IBasicIO> {
     public IBasicIO call() throws Exception {
 
         return new IBasicIO() {
-            EnumDir input = EnumDir.valueOf("left");
-            boolean output = true;
+            EnumDir input;
+            boolean output;
             @Override
             public EnumDir getInput() {
                 return input;
