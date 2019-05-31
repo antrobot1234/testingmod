@@ -9,7 +9,7 @@ public class BasicStorage implements Capability.IStorage<IBasicIO> {
     @Override
     public NBTBase writeNBT(Capability<IBasicIO> capability, IBasicIO instance, EnumFacing side) {
         NBTTagCompound nbt = new NBTTagCompound();
-        nbt.setString("input",instance.getInput());
+        nbt.setString("input",instance.getInput().toString());
         nbt.setBoolean("output",instance.getOutput());
         return nbt;
     }
