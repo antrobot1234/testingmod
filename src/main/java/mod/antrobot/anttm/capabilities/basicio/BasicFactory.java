@@ -89,7 +89,7 @@ public class BasicFactory implements Callable<IBasicIO> {
                     case up: input = EnumDir.right;return;
                     case left: input = EnumDir.up;return;
                     case down: input = EnumDir.left;return;
-                    case right: input = EnumDir.down;return;
+                    case right: input = EnumDir.down;
                 }
             }
         };
