@@ -1,7 +1,9 @@
 package mod.antrobot.anttm.subscribers;
 
+import mod.antrobot.anttm.items.Inserter;
 import mod.antrobot.anttm.util.ModReference;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.item.Item;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.Mod;
@@ -19,9 +21,14 @@ public class ModelSubscriber {
         registerEntityRenderers();
         ForgeRegistries.ITEMS.getValuesCollection().stream()
                 .filter(item -> item.getRegistryName().getNamespace().equals(ModReference.ID))
+                .filter(ModelSubscriber::hasNormalModel)
                 .forEach(item -> {
             ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
         });
+    }
+    private static boolean hasNormalModel(Item item){
+        if(item instanceof Inserter)return false;
+        return true;
     }
     private static void registerTileEntitySpecialRenderers() {
         //ClientRegistry.bindTileEntitySpecialRenderer(TileEntityExampleTileEntity.class, new RenderExampleTileEntity());
