@@ -68,7 +68,7 @@ public class BasicFactory implements Callable<IBasicIO> {
             }
             @Override
             public int calcOutput(int slot) {
-                if(!output)return -1;
+                if(!output)return 0;
                 switch (input) {
                     case left: return calcRight(slot);
                     case right: return calcLeft(slot);
@@ -89,7 +89,7 @@ public class BasicFactory implements Callable<IBasicIO> {
                     case up: input = EnumDir.right;return;
                     case left: input = EnumDir.up;return;
                     case down: input = EnumDir.left;return;
-                    case right: input = EnumDir.down;
+                    default: input = EnumDir.down;
                 }
             }
         };
