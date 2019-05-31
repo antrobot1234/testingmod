@@ -40,11 +40,13 @@ public class Inserter extends ItemTooltip{
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)
     {
+        ActionResult<ItemStack> output = new ActionResult<ItemStack>(EnumActionResult.PASS, playerIn.getHeldItem(handIn));
         ItemStack item = playerIn.getHeldItem(handIn);
         IBasicIO io = item.getCapability(IO_CAPABILITY,null);
+        if(io == null)return output;
         io.cycleInput();
         playerIn.sendStatusMessage(new TextComponentString("pulling from: "+io.getInput()),true);
-        return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, playerIn.getHeldItem(handIn));
+        return output;
     }
     @Override
     public void onUpdate(ItemStack stack, World world, Entity player, int slot, boolean held) {
@@ -53,7 +55,7 @@ public class Inserter extends ItemTooltip{
         if(world.getTotalWorldTime() % 20 != 0)return;
 
         IBasicIO io = stack.getCapability(IO_CAPABILITY,null);
-
+        if(io == null)return;
         if(io.isInvalid(slot))return;
 
         InventoryPlayer inventory = ((EntityPlayer) player).inventory;
@@ -71,23 +73,23 @@ public class Inserter extends ItemTooltip{
         insert(inventory,inStack,outStack,outSlot);
         }
     }
-    public void forward(InventoryPlayer inventory,ItemStack inStack, ItemStack currentWorker,int currentSlot,int count){
+    private void forward(InventoryPlayer inventory,ItemStack inStack, ItemStack currentWorker,int currentSlot,int count){
         if(count >= 10)return;
         if(inStack==currentWorker)return;
         IBasicIO io = currentWorker.getCapability(IO_CAPABILITY,null);
+        if(io == null)return;
         if(io.isInvalid(currentSlot))return;
         int outSlot = io.calcOutput(currentSlot);
         ItemStack outStack = inventory.getStackInSlot(outSlot);
         if(outStack != currentWorker && outStack.getItem()==this){
             forward(inventory,inStack,outStack,outSlot,count+1);
             //TODO see and fix why the fuck this crashed the game with an infinte loop (i mean yeah recursion but seriously)
-            return;
         }
         else{
             insert(inventory,inStack,outStack,outSlot);
         }
     }
-    public void insert(InventoryPlayer inventory,ItemStack inStack, ItemStack outStack, int outSlot){
+    private void insert(InventoryPlayer inventory,ItemStack inStack, ItemStack outStack, int outSlot){
         if(!outStack.isEmpty()) {
             if (outStack.getCount() == outStack.getMaxStackSize()) return;
             if (!inStack.isItemEqual(outStack)) return;
