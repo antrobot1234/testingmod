@@ -70,8 +70,10 @@ public class StandardFactory implements Callable<IStandardIO> {
                         current.put(type,find(dir,type,true));
                     } else {current.put(type,EnumDir.nil);}
                 }
-                else if(current.get(type)==EnumDir.nil){
-                    current.put(type,dir);
+                else if(current.getOrDefault(type,EnumDir.nil)==EnumDir.nil){
+                    if(type != EnumType.nil){
+                        current.put(type,dir);
+                    }
                 }
             }
 
@@ -207,6 +209,7 @@ public class StandardFactory implements Callable<IStandardIO> {
 
             @Override
             public EnumDir getNext(EnumType type) {
+                if(current.get(type)==EnumDir.nil)return EnumDir.nil;
                 EnumDir newDir = find(current.get(type),type,true);
                 current.put(type,newDir);
                 return newDir;

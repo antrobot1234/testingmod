@@ -1,6 +1,0 @@
-{
-  "parent": "item/generated",
-  "textures": {
-    "layer0": "anttm:items/inserter/inserter_left"
-  }
-}

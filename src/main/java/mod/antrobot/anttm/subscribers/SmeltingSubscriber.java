@@ -1,10 +1,7 @@
 package mod.antrobot.anttm.subscribers;
 
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import mod.antrobot.anttm.util.ModReference;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 @GameRegistry.ObjectHolder(ModReference.ID)
 public class SmeltingSubscriber {

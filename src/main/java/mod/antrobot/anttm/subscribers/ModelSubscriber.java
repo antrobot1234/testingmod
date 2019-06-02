@@ -1,6 +1,5 @@
 package mod.antrobot.anttm.subscribers;
 
-import mod.antrobot.anttm.items.Inserter;
 import mod.antrobot.anttm.util.ModReference;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
@@ -28,10 +27,6 @@ public class ModelSubscriber {
         });
     }
     private static boolean hasNormalModel(Item item){
-        if(item instanceof Inserter){
-            ((Inserter) item).initModel();
-            return false;
-        }
         return true;
     }
     private static void registerTileEntitySpecialRenderers() {
