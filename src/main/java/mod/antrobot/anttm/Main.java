@@ -3,6 +3,9 @@ package mod.antrobot.anttm;
 import mod.antrobot.anttm.capabilities.standardio.IStandardIO;
 import mod.antrobot.anttm.capabilities.standardio.StandardFactory;
 import mod.antrobot.anttm.capabilities.standardio.StandardStorage;
+import mod.antrobot.anttm.capabilities.storagesize.IStorageSize;
+import mod.antrobot.anttm.capabilities.storagesize.SizeStorage;
+import mod.antrobot.anttm.capabilities.storagesize.StorageFactory;
 import mod.antrobot.anttm.subscribers.SmeltingSubscriber;
 import mod.antrobot.anttm.util.ModReference;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -17,6 +20,7 @@ public class Main {
     @Mod.EventHandler
     public static void preInit(FMLPreInitializationEvent event){
         CapabilityManager.INSTANCE.register(IStandardIO.class,new StandardStorage(), new StandardFactory());
+        CapabilityManager.INSTANCE.register(IStorageSize.class,new SizeStorage(), new StorageFactory());
     }
 
     @Mod.EventHandler

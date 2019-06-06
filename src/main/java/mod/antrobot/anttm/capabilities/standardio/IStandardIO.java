@@ -1,6 +1,7 @@
 package mod.antrobot.anttm.capabilities.standardio;
 
 import mod.antrobot.anttm.capabilities.standardio.EnumIO.*;
+import net.minecraft.entity.player.InventoryPlayer;
 
 import java.util.HashMap;
 
@@ -10,8 +11,8 @@ public interface IStandardIO {
     HashMap<EnumDir,EnumType> getSides();
     HashMap<EnumDir,EnumType> getSidesOf(EnumType type);
 
-    HashMap<EnumDir,Integer> getSlots(int slot);
-    HashMap<EnumDir,Integer> getSlotsOf(int slot,EnumType type);
+    HashMap<EnumDir,Integer> getSlots(InventoryPlayer inv,int slot);
+    HashMap<EnumDir,Integer> getSlotsOf(InventoryPlayer inv,int slot,EnumType type);
 
     int getAmount(EnumType type);
 
@@ -28,9 +29,9 @@ public interface IStandardIO {
     int calcUp(int slot);
     int calcDown(int slot);
 
-    int calcFace(int slot,EnumDir dir);
+    int calcFaceExtend(InventoryPlayer inv,int slot,EnumDir dir);
 
-    boolean isValidSlot(int slot);
+    boolean isValidSlot(InventoryPlayer inv,int slot);
 
     EnumDir find(EnumDir dir,EnumType type,boolean next);
 

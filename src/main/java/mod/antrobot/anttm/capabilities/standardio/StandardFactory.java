@@ -4,9 +4,15 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.concurrent.Callable;
 import mod.antrobot.anttm.capabilities.standardio.EnumIO.*;
+import mod.antrobot.anttm.util.ModReference;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.Item;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 
 public class StandardFactory implements Callable<IStandardIO> {
+    @GameRegistry.ObjectHolder(ModReference.ID+":extender")
+    private static final Item extender = null;
     @Override
     public IStandardIO call() throws Exception {
         return new IStandardIO() {
@@ -38,20 +44,20 @@ public class StandardFactory implements Callable<IStandardIO> {
             }
 
             @Override
-            public HashMap<EnumDir, Integer> getSlots(int slot) {
+            public HashMap<EnumDir, Integer> getSlots(InventoryPlayer inv,int slot) {
                 HashMap<EnumDir,Integer> output = new HashMap<>();
                 for(HashMap.Entry<EnumDir,EnumType> entry: map.entrySet()){
-                    output.put(entry.getKey(),calcFace(slot,entry.getKey()));
+                    output.put(entry.getKey(),calcFaceExtend(inv,slot,entry.getKey()));
                 }
                 return output;
             }
 
             @Override
-            public HashMap<EnumDir, Integer> getSlotsOf(int slot,EnumType type) {
+            public HashMap<EnumDir, Integer> getSlotsOf(InventoryPlayer inv, int slot,EnumType type) {
                 HashMap<EnumDir,Integer> output = new HashMap<>();
                 for(HashMap.Entry<EnumDir,EnumType> entry: map.entrySet()){
                     if(entry.getValue()==type){
-                    output.put(entry.getKey(),calcFace(slot,entry.getKey()));
+                    output.put(entry.getKey(),calcFaceExtend(inv,slot,entry.getKey()));
                     }
                 }
                 return output;
@@ -127,8 +133,7 @@ public class StandardFactory implements Callable<IStandardIO> {
                 return slot+9;
             }
 
-            @Override
-            public int calcFace(int slot, EnumDir dir) {
+            private int calcFace(int slot, EnumDir dir) {
                 switch(dir){
                     case up: return calcUp(slot);
                     case down: return calcDown(slot);
@@ -139,10 +144,18 @@ public class StandardFactory implements Callable<IStandardIO> {
             }
 
             @Override
-            public boolean isValidSlot(int slot) {
+            public int calcFaceExtend(InventoryPlayer inv, int slot, EnumDir dir) {
+                int calc = calcFace(slot,dir);
+                if(calc ==-1)return calc;
+                if(inv.getStackInSlot(calc).getItem()==extender)return(calcFaceExtend(inv,calc,dir));
+                else return calc;
+            }
+
+            @Override
+            public boolean isValidSlot(InventoryPlayer inv, int slot) {
                 for(HashMap.Entry entry: map.entrySet()){
                     if(entry.getValue()!=EnumType.nil){
-                        if(calcFace(slot,(EnumDir)entry.getKey())==-1)return false;
+                        if(calcFaceExtend(inv,slot,(EnumDir)entry.getKey())==-1)return false;
                     }
                 }
                 return true;
