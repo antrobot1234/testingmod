@@ -9,7 +9,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-public abstract class InserterBase extends ItemIOReplacement{
+public abstract class InserterBase extends ItemIO {
     public InserterBase(String tip, EnumType up, EnumType right, EnumType down, EnumType left, boolean isStatic) {
         super(tip, up, right, down, left, isStatic);
     }
@@ -21,10 +21,10 @@ public abstract class InserterBase extends ItemIOReplacement{
 
     @Override
     void put(InventoryPlayer inventory, ItemStack item, ItemStack worker,EnumDir face,int slot) {
-        int outSlot = worker.getCapability(IO_CAPABILITY,null).calcFace(slot,face);
+        int outSlot = worker.getCapability(IO_CAPABILITY,null).calcFaceExtend(inventory,slot,face);
         ItemStack stack = inventory.getStackInSlot(outSlot);
         if(stack.isEmpty()){
-            inventory.setInventorySlotContents(slot,item);
+            inventory.setInventorySlotContents(outSlot,item);
         }
         else{
             stack.grow(1);
@@ -40,9 +40,8 @@ public abstract class InserterBase extends ItemIOReplacement{
 
         IStandardIO io = stack.getCapability(IO_CAPABILITY, null);
         if (io == null) return;
-        if (!io.isValidSlot(slot)) return;
-
         InventoryPlayer inventory = ((EntityPlayer) player).inventory;
+        if (!io.isValidSlot(inventory,slot)) return;
         EnumDir inFace = io.getNext(EnumType.input);
         EnumDir outFace = io.getNext(EnumType.output);
         if(inFace == EnumDir.nil && outFace == EnumDir.nil)return;
@@ -50,9 +49,9 @@ public abstract class InserterBase extends ItemIOReplacement{
         ItemStack output;
         if(inFace!= EnumDir.nil && outFace != EnumDir.nil){
             input = get(inventory,inFace,stack,slot);
-            output = get(inventory,inFace,stack,slot);
+            output = get(inventory,outFace,stack,slot);
             if(canIO(transform(input),stack,output)){
-                putF(inventory,transform(take(inventory,input,stack)),stack,outFace,slot);
+                put(inventory,transform(take(inventory,input,stack)),stack,outFace,slot);
             }
         }
         else if(inFace != EnumDir.nil){
@@ -62,9 +61,9 @@ public abstract class InserterBase extends ItemIOReplacement{
             }
         }
         else{
-            output = get(inventory,inFace,stack,slot);
+            output = get(inventory,outFace,stack,slot);
             if(canIO(transform(stack),stack,output)){
-                putF(inventory,transform(stack),stack,outFace,slot);
+                put(inventory,transform(stack),stack,outFace,slot);
             }
         }
     }

@@ -1,9 +1,12 @@
 package mod.antrobot.anttm.items;
 
 import mod.antrobot.anttm.capabilities.standardio.EnumIO.EnumType;
+import mod.antrobot.anttm.util.ModReference;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.ItemStack;
 
 public class Inserter extends InserterBase{
+
     public Inserter(String tip) {
         super(tip, EnumType.nil, EnumType.output, EnumType.nil, EnumType.input,true);
     }
