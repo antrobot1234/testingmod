@@ -7,9 +7,13 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
 public abstract class InserterBase extends ItemIO {
+
+
     public InserterBase(String tip, EnumType up, EnumType right, EnumType down, EnumType left, boolean isStatic) {
         super(tip, up, right, down, left, isStatic);
     }
@@ -21,16 +25,26 @@ public abstract class InserterBase extends ItemIO {
 
     @Override
     void put(InventoryPlayer inventory, ItemStack item, ItemStack worker,EnumDir face,int slot) {
-        int outSlot = worker.getCapability(IO_CAPABILITY,null).calcFaceExtend(inventory,slot,face);
+        int outSlot = worker.getCapability(IO_CAPABILITY, null).calcFaceExtend(inventory, slot, face);
         ItemStack stack = inventory.getStackInSlot(outSlot);
-        if(stack.isEmpty()){
-            inventory.setInventorySlotContents(outSlot,item);
-        }
-        else{
+        if (stack.isEmpty()) {
+            inventory.setInventorySlotContents(outSlot, item);
+        } else {
             stack.grow(1);
         }
     }
-
+    @Override
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+        ActionResult<ItemStack> action = super.onItemRightClick(world, player, hand);
+        IStandardIO io = player.getHeldItem(hand).getCapability(IO_CAPABILITY,null);
+        if(io==null)return super.onItemRightClick(world, player, hand);
+        if(isStatic || !io.getSides().containsValue(EnumType.nil)){
+            io.rotate();
+        } else if(player.isSneaking()){
+            io.cycle(EnumType.output);
+        } else io.cycle(EnumType.input);
+        return action;
+    }
 
     @Override
     public void onUpdate(ItemStack stack, World world, Entity player, int slot, boolean held) {

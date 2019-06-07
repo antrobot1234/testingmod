@@ -8,7 +8,7 @@ import net.minecraft.item.ItemStack;
 public class Inserter extends InserterBase{
 
     public Inserter(String tip) {
-        super(tip, EnumType.nil, EnumType.output, EnumType.nil, EnumType.input,true);
+        super(tip, EnumType.nil, EnumType.output, EnumType.nil, EnumType.input,false);
     }
 
     //TODO FIX rendering
