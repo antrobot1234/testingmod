@@ -1,6 +1,9 @@
 package mod.antrobot.anttm.Render;
 
+import mod.antrobot.anttm.capabilities.standardio.EnumIO.EnumDir;
 import mod.antrobot.anttm.capabilities.standardio.EnumIO.EnumType;
+import mod.antrobot.anttm.capabilities.standardio.IStandardIO;
+import mod.antrobot.anttm.items.ItemIO;
 import mod.antrobot.anttm.util.ModItemList;
 import mod.antrobot.anttm.util.ModReference;
 import net.minecraft.client.Minecraft;
@@ -20,8 +23,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ForgeHooksClient;
 import org.lwjgl.opengl.GL11;
 
-import java.util.HashMap;
-
 
 public class ItemIORenderWrapper extends TileEntityItemStackRenderer {
     public BufferBuilder putIOColor(BufferBuilder buf, EnumType type,boolean isCurrent){
@@ -36,6 +37,23 @@ public class ItemIORenderWrapper extends TileEntityItemStackRenderer {
         } else {
             return buf.color(200,100,0,255);
         }
+    }
+    public void drawTriangle(BufferBuilder buf, EnumType type, EnumDir dir,boolean isCurrent){
+        final float size = .1f;
+        final float gui = .5f;
+        int x = 0;
+        int y = 0;
+        float shift = 0;
+        switch(dir){
+            case up: y = 1;break;
+            case down: y = -1;break;
+            case right: x = 1;break;
+            case left: x = -1;
+        }
+        if(type==EnumType.output)shift = size;
+        putIOColor(buf.pos((x*gui)+(y*size)-(shift*x),(y*gui)+(x*size)-(shift*y),0).tex(0,0),type,isCurrent).endVertex();
+        putIOColor(buf.pos((x*gui)-(y*size)-(shift*x),(y*gui)-(x*size)-(shift*y),0).tex(0,0),type,isCurrent).endVertex();
+        putIOColor(buf.pos((x*gui)-(x*size)+(shift*x),(y*gui)-(y*size)+(shift*y),0).tex(0,0),type,isCurrent).endVertex();
     }
     public static ModelResourceLocation getResourceLocation(String name){
         return new ModelResourceLocation(new ResourceLocation(ModReference.ID,name),"inventory");
@@ -58,27 +76,24 @@ public class ItemIORenderWrapper extends TileEntityItemStackRenderer {
         GlStateManager.translate(.5f,.5f,.5f);
         GlStateManager.disableTexture2D();
         GlStateManager.disableCull();
+        GlStateManager.disableLighting();
         buf.begin(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION_TEX_COLOR);
 
-        putIOColor(buf.pos(.5,.5,0).tex(0,0),EnumType.input,true).endVertex();
-        putIOColor(buf.pos(0,0,0).tex(0,0),EnumType.input,true).endVertex();
-        putIOColor(buf.pos(.5,-.5,0).tex(0,0),EnumType.input,true).endVertex();
-
-        //todo actually render arrows
-        /*
         IStandardIO io = stack.getCapability(ItemIO.IO_CAPABILITY,null);
-        buf.putPosition(0,0,0);
-        buf.putPosition(1,1,0);
-        buf.endVertex();
-         */
-        /*for(EnumIO.EnumDir dir: EnumIO.EnumDir.values()){
-            if(dir == EnumIO.EnumDir.nil)return;
-        }*/
+        EnumType type;
+        for(EnumDir dir: EnumDir.values()){
+            if(dir == EnumDir.nil)continue;
+            if(io==null)continue;
+            type = io.getFace(dir);
+            if(type==EnumType.nil)continue;
+            drawTriangle(buf,type,dir,io.getCurrent(type)==dir);
+        }
 
 
         tes.draw();
         GlStateManager.enableTexture2D();
         GlStateManager.enableCull();
+        GlStateManager.enableLighting();
         GlStateManager.popMatrix();
     }
 }
